@@ -178,9 +178,15 @@ function draw(){
         textSize(12);
         text("Hold", 525, 385);
 
+
         fill(255);
         textSize(60);
-        text(squatCount, 320, 240);
+        if(squatCount < 10){
+            text(squatCount, 320, 240);
+        }
+        else {
+            text("Clear!!", 240, 240);
+        }
     }
 
 }
