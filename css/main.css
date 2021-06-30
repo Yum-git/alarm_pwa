@@ -12,6 +12,10 @@ body{
     color: black;
 }
 
+#container h1{
+    color: aqua;
+}
+
 #output{
     margin: 0 auto;
     text-align: center;

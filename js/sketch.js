@@ -133,6 +133,8 @@ function draw(){
         stroke(0, 0, 0); //　線の色
         ellipse(100, 380, 100, 100);
         // 50 150 330 420
+        fill(255);
+        text("Start & Reset", 60, 385);
     }
 
 }
