@@ -15,6 +15,10 @@ let rightShoulderYAve;
 let leftShouldYMax = Number.MAX_SAFE_INTEGER;
 let rightShouldYMax = Number.MAX_SAFE_INTEGER;
 
+let squatCount = 0;
+let squatBool = false;
+let squatHold = false;
+
 function setup(){
     let canvas = createCanvas(640, 480);
     canvas.parent('container');
@@ -41,6 +45,9 @@ function poseDraw(poses){
 function moveOutput(poseList){
     let output = document.getElementById("output");
     let outputList = [];
+    outputList.push('<div style="color: aliceblue">');
+    outputList.push(squatHold);
+    outputList.push('</div>');
     outputList.push('<table class="table table-bordered table-sm oneLine"><tbody>')
     outputList.push('<thead><tr><th>Pose</th><th>X</th><th>Y</th><tr></thead>')
     for (let idx = 0; idx < poseList.length; idx++){
@@ -67,13 +74,17 @@ function shoulderOutput(){
     rightShoulderXList.push(Math.trunc(rightShoulder.x));
     rightShoulderYList.push(Math.trunc(rightShoulder.y));
 
+
+
     if(leftShoulderXList.length === 100){
         leftShouldXAve = leftShoulderXList.reduce((prev,current)=>prev + current,0) / leftShoulderXList.length;
         leftShoulderXList.shift();
     }
     if(leftShoulderYList.length === 100){
         leftShouldYAve = leftShoulderYList.reduce((prev,current)=>prev + current,0) / leftShoulderYList.length;
-        leftShouldYMax = Math.min(leftShouldYAve, leftShouldYMax);
+        if(!squatHold){
+            leftShouldYMax = Math.min(leftShouldYAve, leftShouldYMax);
+        }
         leftShoulderYList.shift();
     }
     if(rightShoulderXList.length === 100){
@@ -82,23 +93,49 @@ function shoulderOutput(){
     }
     if(rightShoulderYList.length === 100){
         rightShoulderYAve = rightShoulderYList.reduce((prev,current)=>prev + current,0) / rightShoulderYList.length;
-        rightShouldYMax = Math.min(rightShoulderYAve, rightShouldYMax);
+        if(!squatHold){
+            rightShouldYMax = Math.min(rightShoulderYAve, rightShouldYMax);
+        }
         rightShoulderYList.shift();
+    }
+
+    if(squatHold && leftShouldYAve < leftShouldYMax && rightShoulderYAve < rightShouldYMax && squatBool === true){
+        squatCount += 1;
+        squatBool = false;
+    }
+
+    if(squatHold && leftShouldYAve > leftShouldYMax && rightShoulderYAve > rightShouldYMax && squatBool === false){
+        squatBool = true;
     }
 }
 
 function wristCheck(){
     const rightWrist = pose.rightWrist;
-    const x = Math.trunc(rightWrist.x);
-    const y = Math.trunc(rightWrist.y);
-    if(75 <= x && x <= 125 && 355 <= y && y <= 395){
+    const rightX = Math.trunc(rightWrist.x);
+    const rightY = Math.trunc(rightWrist.y);
+    // 100, 380
+    if(75 <= rightX && rightX <= 125 && 355 <= rightY && rightY <= 395 && !squatHold){
         console.log("reset");
-        console.log(x, y);
+        console.log(rightX, rightY);
+        squatCount = 0;
         leftShouldYMax = Number.MAX_SAFE_INTEGER;
         rightShouldYMax = Number.MAX_SAFE_INTEGER;
     }
-    else{
-        console.log("none reset");
+
+    const leftWrist = pose.leftWrist;
+    const leftX = Math.trunc(leftWrist.x);
+    const leftY = Math.trunc(leftWrist.y);
+    // 540, 380
+    if(515 <= leftX && leftX <= 565 && 355 <= leftY && leftY <= 405){
+        console.log("hold");
+        if(squatHold){
+            squatHold = false;
+            squatBool = false;
+        }
+        else {
+            squatHold = true;
+            squatBool = true;
+        }
     }
 }
 
@@ -132,9 +169,18 @@ function draw(){
         line(0, leftShouldYMax, width, rightShouldYMax); // 横の位置(始点), 縦の位置(始点),　横の位置(終点), 縦の位置(終点)
         stroke(0, 0, 0); //　線の色
         ellipse(100, 380, 100, 100);
-        // 50 150 330 420
         fill(255);
+        textSize(12);
         text("Start & Reset", 60, 385);
+
+        ellipse(540, 380, 100, 100);
+        fill(120);
+        textSize(12);
+        text("Hold", 525, 385);
+
+        fill(255);
+        textSize(60);
+        text(squatCount, 320, 240);
     }
 
 }
