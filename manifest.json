@@ -1,0 +1,16 @@
+{
+  "name": "MuscleAlarm",
+  "short_name": "MuscleAlarm",
+  "background_color": "#fc980c",
+  "icons": [{
+    "src": "icon/icon256.png",
+    "sizes": "256x256",
+    "type": "image/png"
+  },{
+    "src": "icon/icon192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }],
+  "start_url": "index.html",
+  "display": "standalone"
+}

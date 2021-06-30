@@ -1,0 +1,27 @@
+body{
+    margin: 0;
+    background: linear-gradient(90deg,#0e0f0f 0,#1f2021 30%,#2b2d2e 57%,#2d2f30 64%,#2d2f30);
+}
+
+.selector-for-some-widget {
+    box-sizing: content-box;
+}
+
+#container{
+    text-align: center;
+    color: black;
+}
+
+#output{
+    margin: 0 auto;
+    text-align: center;
+    width: 50%;
+}
+
+#output th{
+    width: 100px;
+}
+
+.oneLine{
+    color: aqua;
+}
